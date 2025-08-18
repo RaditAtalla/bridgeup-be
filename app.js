@@ -1,21 +1,14 @@
 const express = require("express")
 const supabase = require("./supabase/config.js")
+const cors = require("cors")
 require("dotenv").config()
 
 const app = express()
 
+app.use(cors())
+
 app.get("/", (req, res) => {
-    res.send("Hello ASE")
-})
-
-app.get("/food", async (req, res) => {
-    const { data, error } = await supabase.from("food").select()
-
-    if (!error) {
-        return res.send(data)
-    }
-
-    res.send(error)
+    res.send("Hello BridgeUp backend")
 })
 
 app.listen(3000, () => {
