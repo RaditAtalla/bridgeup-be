@@ -29,4 +29,29 @@ router.get("/:activityId", authMiddleware, async (req, res) => {
     }
 })
 
+router.post("/:activityId", async (req, res) => {
+    const { activityId } = req.params
+    const { name, description, label, priority, deadline, pic } = req.body
+
+    try {
+        const { error } = await supabase.from("todo").insert({
+            activityId,
+            name,
+            description,
+            label,
+            priority,
+            deadline,
+            pic,
+        })
+
+        if (error) {
+            return res.status(401).send({ success: false, msg: error.message })
+        }
+
+        res.status(200).send({ success: true, msg: "todo posted" })
+    } catch (error) {
+        res.status(500).send({ success: false, msg: error.message })
+    }
+})
+
 module.exports = router
