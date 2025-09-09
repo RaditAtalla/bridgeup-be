@@ -12,9 +12,10 @@ router.get("/", authMiddleware, async (req, res) => {
 
         const { data: profile } = await supabase
             .from("user")
-            .select()
+            .select(`user_rating_review(rating,review)`)
             .single()
             .eq("email", user.email)
+            .eq("user_rating_review.user_id", user.id)
 
         res.status(200).send({
             success: true,
@@ -32,8 +33,9 @@ router.get("/:username", async (req, res) => {
     try {
         const { data, error } = await supabase
             .from("user")
-            .select()
+            .select(`user_rating_review(rating,review)`)
             .eq("username", username)
+            .eq("user_rating_review.username", username)
 
         if (error) {
             return res.status(400).send({ success: false, msg: error.message })
