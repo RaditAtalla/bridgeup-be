@@ -82,14 +82,18 @@ router.post("/logout", async (req, res) => {
     }
 })
 
-router.get("/user", async (req, res) => {
+router.get("/me", authMiddleware, async (req, res) => {
     try {
-        const token = req.cookies.token
-        const user = await supabase.auth.getUser(token)
+        const token = req.cookies.access_token
+        const { data, error } = await supabase.auth.getUser(token)
 
-        res.status(200).send(user.data.user.email)
+        if (error) {
+            return res.status(401).send({ success: false, msg: error.message })
+        }
+
+        res.status(200).send({ success: true, user: data })
     } catch (error) {
-        res.status(500).send("Error fetching user: " + error)
+        res.status(500).send({ success: false, msg: error.message })
     }
 })
 
