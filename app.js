@@ -9,6 +9,7 @@ const activityRoutes = require("./routes/activity")
 const profileRoutes = require("./routes/profile")
 const notificationRoutes = require("./routes/notification")
 const todoRoutes = require("./routes/todo")
+const reportRoutes = require("./routes/report")
 
 app.use(
     cors({
@@ -27,6 +28,7 @@ app.use("/activity", activityRoutes)
 app.use("/profile", profileRoutes)
 app.use("/notification", notificationRoutes)
 app.use("/todo", todoRoutes)
+app.use("/report", reportRoutes)
 
 app.listen(3000, () => {
     console.log("running on http://localhost:3000")
