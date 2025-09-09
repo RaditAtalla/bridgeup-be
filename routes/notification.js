@@ -27,4 +27,22 @@ router.get("/", authMiddleware, async (req, res) => {
     }
 })
 
+router.post("/", async (req, res) => {
+    const { title, description, receiverId } = req.body
+
+    try {
+        const { error } = await supabase
+            .from("notification")
+            .insert({ title, description, receiver_id: receiverId })
+
+        if (error) {
+            return res.status(400).send({ success: false, msg: error.message })
+        }
+
+        res.status(200).send({ success: true, msg: "notification added" })
+    } catch (error) {
+        res.status(500).send({ success: false, msg: "Internal server error" })
+    }
+})
+
 module.exports = router
