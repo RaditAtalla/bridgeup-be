@@ -2,7 +2,7 @@ const supabase = require("../supabase/config")
 
 async function authMiddleware(req, res, next) {
     try {
-        const token = req.cookies.access_token
+        let token = req.cookies.access_token
 
         if (!token) {
             return res.status(401).send({ success: false, msg: "Unauthorized" })
