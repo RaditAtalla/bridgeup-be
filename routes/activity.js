@@ -89,7 +89,7 @@ router.get("/history", authMiddleware, async (req, res) => {
 
         const { data, error } = await supabase
             .from("activity_member")
-            .select(`user_id, activity(*)`)
+            .select(`activity(*)`)
             .eq("activity.status", "done")
             .eq("user_id", user.id)
 
