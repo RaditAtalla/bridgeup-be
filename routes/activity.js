@@ -104,6 +104,25 @@ router.get("/:uuid", async (req, res) => {
     }
 })
 
+router.get("/:uuid", async (req, res) => {
+    const { uuid } = req.params
+
+    try {
+        const { data, error } = await supabase
+            .from("activity_member")
+            .select()
+            .eq("activity_id", uuid)
+
+        if (error) {
+            return res.status(400).send({ success: false, msg: error.message })
+        }
+
+        res.status(200).send({ success: true, members: data })
+    } catch (error) {
+        res.status(500).send({ success: false, msg: error.message })
+    }
+})
+
 router.post("/", authMiddleware, async (req, res) => {
     const { name, description, picture, category } = req.body
     const token = req.userToken
