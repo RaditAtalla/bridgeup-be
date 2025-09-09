@@ -28,22 +28,33 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
     try {
-        const signIn = await supabase.auth.signInWithPassword({
+        const { error } = await supabase.auth.signInWithPassword({
             email: req.body.email,
             password: req.body.password,
         })
 
-        if (signIn.error) {
-            return res.status(401).send({ msg: "Invalid credentials" })
+        if (error) {
+            return res.status(401).send({ success: false, msg: error.message })
         }
 
-        res.cookie("token", signIn.data.session.access_token, {
+        res.cookie("refresh_token", signIn.data.session.refresh_token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
+            maxAge: 1000 * 60 * 60 * 24 * 30,
         })
 
-        res.status(200).send("logged in")
+        res.cookie("access_token", signIn.data.session.access_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 1000 * 60 * 60,
+        })
+
+        res.status(200).send({
+            success: true,
+            msg: "Login successful",
+        })
     } catch (error) {
         res.status(500).send("server error: " + error.message)
     }
