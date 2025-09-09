@@ -10,7 +10,7 @@ router.post("/user", async (req, res) => {
     try {
         const { data, error } = await supabase
             .from("user")
-            .select(`username, fullName, profilePic`)
+            .select(`id, username, fullName, profilePic`)
             .or(`username.ilike.%${query}%,fullName.ilike.%${query}%}`)
 
         if (error) {
