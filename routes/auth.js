@@ -5,12 +5,21 @@ const router = express.Router()
 
 router.post("/register", async (req, res) => {
     try {
-        await supabase.auth.signUp({
+        const signUp = await supabase.auth.signUp({
             email: req.body.email,
             password: req.body.password,
         })
 
-        res.status(200).send("User registered successfully")
+        if (signUp.error) {
+            return res
+                .status(401)
+                .send({ success: false, msg: signUp.error.message })
+        }
+
+        res.status(200).send({
+            success: true,
+            msg: "Verification email sent",
+        })
     } catch (error) {
         res.status(500).send("Error registering user: " + error.message)
     }
