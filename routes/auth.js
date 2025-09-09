@@ -64,13 +64,19 @@ router.post("/logout", async (req, res) => {
     try {
         await supabase.auth.signOut({ scope: "local" })
 
-        res.clearCookie("token", {
+        res.clearCookie("refresh_token", {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
         })
 
-        res.status(200).send("logged out successfully")
+        res.clearCookie("access_token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+        })
+
+        res.status(200).send({ success: true, msg: "Logged out successfuly" })
     } catch (error) {
         res.send(error.message)
     }
