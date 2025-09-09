@@ -97,20 +97,46 @@ router.get("/me", authMiddleware, async (req, res) => {
     }
 })
 
-router.post("/reset-password-request", async (req, res) => {
+router.post("/otp-request", async (req, res) => {
     try {
         const { email } = req.body
-        const { error } = await supabase.auth.resetPasswordForEmail(email)
+        const { error } = await supabase.auth.signInWithOtp({
+            email,
+            options: { shouldCreateUser: false },
+        })
 
         if (error) {
-            return res
-                .status(400)
-                .send("Error sending reset password email: " + error.message)
+            return res.status(400).send({
+                success: false,
+                msg: "Failed sending reset password email: " + error.message,
+            })
         }
 
-        res.status(200).send("Reset password email sent successfully")
+        res.status(200).send({
+            success: true,
+            msg: "Reset password email sent successfully",
+        })
     } catch (error) {
-        res.status(500).send("Error processing request: " + error.message)
+        res.status(500).send({ success: false, msg: error.message })
+    }
+})
+
+router.post("/otp-verification", async (req, res) => {
+    try {
+        const { otp, email } = req.body
+        const { error } = await supabase.auth.verifyOtp({
+            email,
+            token: otp,
+            type: "email",
+        })
+
+        if (error) {
+            return res.status(400).send({ success: false, msg: "OTP failed" })
+        }
+
+        res.status(200).send({ success: true, msg: "Verification successful" })
+    } catch (error) {
+        res.status(500).send({ success: false, msg: error.message })
     }
 })
 
