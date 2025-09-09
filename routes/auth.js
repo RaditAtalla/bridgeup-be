@@ -22,7 +22,7 @@ router.post("/register", async (req, res) => {
             msg: "Verification email sent",
         })
     } catch (error) {
-        res.status(500).send("Error registering user: " + error.message)
+        res.status(500).send({ success: false, msg: error.message })
     }
 })
 
@@ -56,7 +56,7 @@ router.post("/login", async (req, res) => {
             msg: "Login successful",
         })
     } catch (error) {
-        res.status(500).send("server error: " + error.message)
+        res.status(500).send({ success: false, msg: error.message })
     }
 })
 
@@ -78,7 +78,7 @@ router.post("/logout", async (req, res) => {
 
         res.status(200).send({ success: true, msg: "Logged out successfuly" })
     } catch (error) {
-        res.send(error.message)
+        res.status(500).send({ success: false, msg: error.message })
     }
 })
 
