@@ -15,7 +15,7 @@ router.get("/", authMiddleware, async (req, res) => {
         const { data, error } = await supabase
             .from("notification")
             .select()
-            .or(`receiver_id.eq.${user.id},status.eq.system`)
+            .or(`receiver_id.eq.${user.id},receiver_id.is.null,receiver_id.is.`)
 
         if (error) {
             return res.status(400).send({ success: false, msg: error.message })
