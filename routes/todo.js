@@ -7,17 +7,24 @@ const router = express.Router()
 router.get("/:activityId", authMiddleware, async (req, res) => {
     const token = req.userToken
     const { activityId } = req.params
+    const { date } = req.query || ""
 
     try {
         const {
             data: { user },
         } = await supabase.auth.getUser(token)
 
-        const { data, error } = await supabase
+        let query = supabase
             .from("todo")
             .select()
             .eq("activity_id", activityId)
             .eq("user_id", user.id)
+
+        if (date) {
+            query.eq("deadline", date)
+        }
+
+        const { data, error } = await query
 
         if (error) {
             return res.status(401).send({ success: false, msg: error.message })
