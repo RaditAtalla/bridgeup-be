@@ -79,6 +79,30 @@ router.get("/joined", authMiddleware, async (req, res) => {
     }
 })
 
+router.get("/history", authMiddleware, async (req, res) => {
+    const token = req.userToken
+
+    try {
+        const {
+            data: { user },
+        } = await supabase.auth.getUser(token)
+
+        const { data, error } = await supabase
+            .from("activity_member")
+            .select(`user_id, activity(*)`)
+            .eq("activity.status", "done")
+            .eq("user_id", user.id)
+
+        if (error) {
+            return res.status(400).send({ success: false, msg: error.message })
+        }
+
+        res.status(200).send({ success: true, history: data })
+    } catch (error) {
+        res.status(500).send({ success: false, msg: error.message })
+    }
+})
+
 router.get("/:uuid", async (req, res) => {
     const { uuid } = req.params
 
