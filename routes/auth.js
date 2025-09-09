@@ -140,7 +140,7 @@ router.post("/otp-verification", async (req, res) => {
     }
 })
 
-router.post("/reset-password", async (req, res) => {
+router.post("/password-reset", async (req, res) => {
     try {
         const { error } = await supabase.auth.updateUser({
             email: req.body.email,
@@ -148,14 +148,18 @@ router.post("/reset-password", async (req, res) => {
         })
 
         if (error) {
-            return res
-                .status(400)
-                .send("Error resetting password: " + error.message)
+            return res.status(400).send({
+                success: false,
+                msg: "Error resetting password: " + error.message,
+            })
         }
 
-        res.status(200).send("Reset password successful")
+        res.status(200).send({
+            success: true,
+            msg: "Reset password successful",
+        })
     } catch (error) {
-        res.status(500).send("Error processing request: " + error.message)
+        res.status(500).send({ success: false, msg: error.message })
     }
 })
 
