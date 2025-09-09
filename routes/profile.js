@@ -114,6 +114,30 @@ router.post("/friend-request/:receiverId", authMiddleware, async (req, res) => {
     }
 })
 
+router.post("/:userId/review", authMiddleware, async (req, res) => {
+    const token = req.userToken
+    const { rating, review } = req.body
+    const { userId } = req.params
+
+    try {
+        const {
+            data: { user },
+        } = await supabase.auth.getUser(token)
+
+        const { error } = await supabase
+            .from("user_rating_review")
+            .insert({ rating, review, created_by: user.id, user_id: userId })
+
+        if (error) {
+            return res.status(400).send({ success: false, msg: error.message })
+        }
+
+        res.status(200).send({ success: true, msg: "Review n rating added" })
+    } catch (error) {
+        res.status(500).send({ msg: "internal server error" })
+    }
+})
+
 router.patch(
     "/friend-request/:requesterId",
     authMiddleware,
