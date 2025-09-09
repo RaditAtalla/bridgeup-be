@@ -104,7 +104,7 @@ router.get("/:uuid", async (req, res) => {
     }
 })
 
-router.get("/:uuid", async (req, res) => {
+router.get("/:uuid/members", async (req, res) => {
     const { uuid } = req.params
 
     try {
