@@ -61,4 +61,24 @@ router.post("/:activityId", async (req, res) => {
     }
 })
 
+router.patch("/:activityId/status", async (req, res) => {
+    const { status } = req.body
+    const { activityId } = req.params
+
+    try {
+        const { error } = await supabase
+            .from("todo")
+            .update({ status })
+            .eq("activityId", activityId)
+
+        if (error) {
+            return res.status(401).send({ success: false, msg: error.message })
+        }
+
+        res.status(200).send({ success: true, msg: "status changed " })
+    } catch (error) {
+        res.status(500).send({ success: false, msg: error.message })
+    }
+})
+
 module.exports = router
