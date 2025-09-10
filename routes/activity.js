@@ -285,7 +285,7 @@ router.get("/:uuid/requesters", authMiddleware, async (req, res) => {
 
         const { data: requesters, error: requestersError } = await supabase
             .from("activity_member_request")
-            .select() // TODO: inner join activity_member_request and user
+            .select()
             .eq("activity_id", uuid)
 
         if (requestersError) {
