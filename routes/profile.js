@@ -205,12 +205,9 @@ router.delete("/", authMiddleware, async (req, res) => {
         } = await supabase.auth.getUser(token)
 
         const { error } = await supabase.auth.admin.deleteUser(user.id)
-        // TODO: handle trigger for public.user table
 
         if (error) {
-            return res
-                .status(400)
-                .send({ success: false, msg: "Failed deleting account" })
+            return res.status(400).send({ success: false, msg: error.message })
         }
 
         res.status(200).send({ success: true, msg: "Account deleted" })
