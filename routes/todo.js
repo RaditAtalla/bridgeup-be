@@ -61,15 +61,15 @@ router.post("/:activityId", async (req, res) => {
     }
 })
 
-router.patch("/:activityId", async (req, res) => {
+router.patch("/:todoId", async (req, res) => {
     const update = req.body
-    const { activityId } = req.params
+    const { todoId } = req.params
 
     try {
         const { error } = await supabase
             .from("todo")
             .update(update)
-            .eq("activityId", activityId)
+            .eq("id", todoId)
 
         if (error) {
             return res.status(401).send({ success: false, msg: error.message })
@@ -81,15 +81,15 @@ router.patch("/:activityId", async (req, res) => {
     }
 })
 
-router.patch("/:activityId/status", async (req, res) => {
+router.patch("/:todoId/status", async (req, res) => {
     const { status } = req.body
-    const { activityId } = req.params
+    const { todoId } = req.params
 
     try {
         const { error } = await supabase
             .from("todo")
             .update({ status })
-            .eq("activityId", activityId)
+            .eq("id", todoId)
 
         if (error) {
             return res.status(401).send({ success: false, msg: error.message })
