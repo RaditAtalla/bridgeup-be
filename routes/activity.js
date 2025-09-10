@@ -176,50 +176,22 @@ router.post("/", authMiddleware, async (req, res) => {
     }
 })
 
-router.patch("/:uuid", authMiddleware, async (req, res) => {
+router.patch("/:uuid", async (req, res) => {
     const { uuid } = req.params
-    const { name, description, picture, category } = req.body
-    const token = req.userToken
+    const update = req.body
 
     try {
-        const {
-            data: { user },
-        } = await supabase.auth.getUser(token)
-
-        const { data, error } = await supabase
+        const { error: updateError } = await supabase
             .from("activity")
-            .update({
-                name,
-                description,
-                picture,
-                category,
-            })
+            .update(update)
             .eq("id", uuid)
-            .select()
 
-        if (error) {
-            return res.status(400).send({
-                success: false,
-                msg: "Failed updating activity",
-            })
+        if (updateError) {
+            return res.status(400).send({ success: false, msg: error.message })
         }
 
-        // TODO: fix this
-        if (user.id != data[0].created_by) {
-            res.status(401).send({
-                success: false,
-                msg: "Unauthorized",
-            })
-        }
-
-        res.status(200).send({
-            success: true,
-            msg: "Activity Updated",
-            data: data[0].created_by,
-        })
-    } catch (error) {
-        res.status(500).send({ success: false, msg: error.message })
-    }
+        res.status(200).send({ success: true, msg: "Activity updated" })
+    } catch (error) {}
 })
 
 router.delete("/:uuid", authMiddleware, async (req, res) => {
