@@ -37,14 +37,14 @@ router.post("/login", async (req, res) => {
             return res.status(401).send({ success: false, msg: error.message })
         }
 
-        res.cookie("refresh_token", user.data.session.refresh_token, {
+        res.cookie("refresh_token", user.session.refresh_token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
             maxAge: 1000 * 60 * 60 * 24 * 30,
         })
 
-        res.cookie("access_token", user.data.session.access_token, {
+        res.cookie("access_token", user.session.access_token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
