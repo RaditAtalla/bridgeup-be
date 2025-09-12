@@ -91,7 +91,7 @@ router.get("/me", authMiddleware, async (req, res) => {
             return res.status(401).send({ success: false, msg: error.message })
         }
 
-        res.status(200).send({ success: true, user: data })
+        res.status(200).send({ success: true, data })
     } catch (error) {
         res.status(500).send({ success: false, msg: error.message })
     }
