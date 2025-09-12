@@ -27,7 +27,7 @@ router.get("/", authMiddleware, async (req, res) => {
     }
 })
 
-router.post("/", async (req, res) => {
+router.post("/", authMiddleware, async (req, res) => {
     const { title, description, receiverId } = req.body
 
     try {

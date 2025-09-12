@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.post("/user", async (req, res) => {
     const { query } = req.query
-
+    // TODO: add rating filter
     try {
         const { data, error } = await supabase
             .from("user")
@@ -25,7 +25,7 @@ router.post("/user", async (req, res) => {
 
 router.post("/activity", async (req, res) => {
     const { query } = req.query
-
+    // TODO: add category filter
     try {
         const { data, error } = await supabase
             .from("activity")

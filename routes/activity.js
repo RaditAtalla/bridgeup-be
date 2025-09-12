@@ -128,7 +128,7 @@ router.get("/:uuid", async (req, res) => {
     }
 })
 
-router.get("/:uuid/members", async (req, res) => {
+router.get("/:uuid/members", authMiddleware, async (req, res) => {
     const { uuid } = req.params
 
     try {
@@ -176,7 +176,7 @@ router.post("/", authMiddleware, async (req, res) => {
     }
 })
 
-router.patch("/:uuid", async (req, res) => {
+router.patch("/:uuid", authMiddleware, async (req, res) => {
     const { uuid } = req.params
     const update = req.body
 

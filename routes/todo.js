@@ -36,7 +36,7 @@ router.get("/:activityId", authMiddleware, async (req, res) => {
     }
 })
 
-router.post("/:activityId", async (req, res) => {
+router.post("/:activityId", authMiddleware, async (req, res) => {
     const { activityId } = req.params
     const { name, description, label, priority, deadline, pic } = req.body
 
@@ -61,7 +61,7 @@ router.post("/:activityId", async (req, res) => {
     }
 })
 
-router.patch("/:todoId", async (req, res) => {
+router.patch("/:todoId", authMiddleware, async (req, res) => {
     const update = req.body
     const { todoId } = req.params
 
@@ -81,7 +81,7 @@ router.patch("/:todoId", async (req, res) => {
     }
 })
 
-router.patch("/:todoId/status", async (req, res) => {
+router.patch("/:todoId/status", authMiddleware, async (req, res) => {
     const { status } = req.body
     const { todoId } = req.params
 
