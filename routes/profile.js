@@ -170,25 +170,14 @@ router.patch(
 )
 
 router.patch("/", authMiddleware, async (req, res) => {
-    const { fullName, username, profilePic, birthdate, institution, bio } =
-        req.body
+    const update = req.body
 
     try {
         const {
             data: { user },
         } = await supabase.auth.getUser(req.userToken)
 
-        await supabase
-            .from("user")
-            .update({
-                fullName,
-                username,
-                profilePic,
-                birthdate,
-                institution,
-                bio,
-            })
-            .eq("email", user.email)
+        await supabase.from("user").update(update).eq("id", user.id)
 
         res.status(200).send({ success: true, msg: "Profile updated" })
     } catch (error) {
