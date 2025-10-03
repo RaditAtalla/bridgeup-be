@@ -42,7 +42,7 @@ router.post("/:activityId", authMiddleware, async (req, res) => {
 
     try {
         const { error } = await supabase.from("todo").insert({
-            activityId,
+            activity_id: activityId,
             name,
             description,
             label,
@@ -66,7 +66,7 @@ router.patch("/:todoId", authMiddleware, async (req, res) => {
     const { todoId } = req.params
 
     try {
-        const { error } = await supabase
+        const { data, error } = await supabase
             .from("todo")
             .update(update)
             .eq("id", todoId)
@@ -76,26 +76,6 @@ router.patch("/:todoId", authMiddleware, async (req, res) => {
         }
 
         res.status(200).send({ success: true, msg: "todo updated" })
-    } catch (error) {
-        res.status(500).send({ success: false, msg: error.message })
-    }
-})
-
-router.patch("/:todoId/status", authMiddleware, async (req, res) => {
-    const { status } = req.body
-    const { todoId } = req.params
-
-    try {
-        const { error } = await supabase
-            .from("todo")
-            .update({ status })
-            .eq("id", todoId)
-
-        if (error) {
-            return res.status(401).send({ success: false, msg: error.message })
-        }
-
-        res.status(200).send({ success: true, msg: "status changed " })
     } catch (error) {
         res.status(500).send({ success: false, msg: error.message })
     }

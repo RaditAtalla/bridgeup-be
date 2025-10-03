@@ -165,9 +165,7 @@ router.post("/", authMiddleware, async (req, res) => {
         })
 
         if (error) {
-            return res
-                .status(400)
-                .send({ success: false, msg: "Failed creating activity" })
+            return res.status(400).send({ success: false, msg: error.message })
         }
 
         res.status(200).send({ success: true, msg: "Activity created" })
@@ -243,7 +241,7 @@ router.post("/:uuid/join", authMiddleware, async (req, res) => {
         if (activityError) {
             return res.status(400).send({
                 success: false,
-                msg: "Failed joining activity",
+                msg: activityError.message,
             })
         }
 

@@ -11,7 +11,7 @@ router.post("/user", async (req, res) => {
         const { data, error } = await supabase
             .from("user")
             .select(`id, username, fullName, profilePic`)
-            .or(`username.ilike.%${query}%,fullName.ilike.%${query}%}`)
+            .or(`username.ilike.%${query}%,fullName.ilike.%${query}%`)
 
         if (error) {
             return res.status(400).send({ success: false, msg: error.message })

@@ -10,12 +10,15 @@ router.get("/", authMiddleware, async (req, res) => {
             data: { user },
         } = await supabase.auth.getUser(req.userToken)
 
-        const { data: profile } = await supabase
+        const { data: profile, error } = await supabase
             .from("user")
-            .select(`user_rating_review(rating,review)`)
+            .select()
             .single()
             .eq("email", user.email)
-            .eq("user_rating_review.user_id", user.id)
+
+        if (error) {
+            return res.status(400).send({ success: false, msg: error.message })
+        }
 
         res.status(200).send({
             success: true,
@@ -33,9 +36,9 @@ router.get("/:username", async (req, res) => {
     try {
         const { data, error } = await supabase
             .from("user")
-            .select(`user_rating_review(rating,review)`)
+            .select()
+            .single()
             .eq("username", username)
-            .eq("user_rating_review.username", username)
 
         if (error) {
             return res.status(400).send({ success: false, msg: error.message })
@@ -146,12 +149,18 @@ router.patch(
     async (req, res) => {
         const { requesterId } = req.params
         const { status } = req.body
+        const token = req.userToken
 
         try {
+            const {
+                data: { user },
+            } = await supabase.auth.getUser(token)
+
             const { error } = await supabase
                 .from("friend_request")
                 .update({ status })
                 .eq("requester_id", requesterId)
+                .eq("receiver_id", user.id)
 
             if (error) {
                 return res
@@ -162,6 +171,7 @@ router.patch(
             res.status(200).send({
                 success: true,
                 msg: "Friend request accepted",
+                data,
             })
         } catch (error) {
             res.status(500).send({ msg: "internal server error" })
@@ -181,7 +191,7 @@ router.patch("/", authMiddleware, async (req, res) => {
 
         res.status(200).send({ success: true, msg: "Profile updated" })
     } catch (error) {
-        res.status(500).send({ msg: "internal server error" })
+        res.status(500).send({ msg: error.message })
     }
 })
 
